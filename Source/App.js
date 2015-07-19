@@ -1,5 +1,5 @@
-var imgpath = "paths/storebjorn/"
-var jsonfilepath = imgpath+"storebjorn.json"
+var imgpath = "uploads/test3/"
+var jsonfilepath = imgpath+"data.json"
 
 var viewer = new Cesium.Viewer('cesiumContainer', {
     animation : false,
@@ -173,6 +173,22 @@ document.addEventListener('keydown', function(e) {
     case 'O'.charCodeAt(0):
         remove_image();
         viewer.camera.flyTo(set_overview());
+        break;
+    case 'P'.charCodeAt(0):
+        camera_data = {
+            longitude : viewer.camera.positionCartographic.longitude,
+            latitude : viewer.camera.positionCartographic.latitude,
+            height : viewer.camera.positionCartographic.height,
+            pitch : viewer.camera.pitch,
+            heading : viewer.camera.heading,
+            roll : viewer.camera.roll,
+            filename : locations[loc].filename,
+            folder : imgpath
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://192.168.1.222:5000/update_json");
+        //xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xhr.send(JSON.stringify(camera_data));
         break;
     }
     var flagName = getFlagForKeyCode(e.keyCode);

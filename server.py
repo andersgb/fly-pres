@@ -36,6 +36,23 @@ def upload_file():
             return "Success!"
     return 0
 
+@app.route('/update_json', methods=['POST'])
+def upload_test():
+    request_data = json.loads(request.data)
+    json_path = os.path.join(request_data["folder"],'data.json')
+    with open(json_path) as f:
+        json_data = json.load(f)
+    for i, location in enumerate(json_data):
+        if location["filename"] == request_data["filename"]:
+            json_data[i] = request_data
+            print "OK: Replaced"
+            break
+    else:
+        print "NOPE"
+    with open(json_path, "w") as f:
+        json.dump(json_data, f)
+    return "sdf"
+
 @app.route("/json/<directory>")
 def create_json(directory):
     folder_path = os.path.join('uploads', directory)
