@@ -42,7 +42,7 @@ def create_json(directory):
     json_data = []
     for filename in os.listdir(folder_path):
         fullpath = os.path.join(folder_path, filename)
-        if os.path.isfile(fullpath):
+        if os.path.isfile(fullpath) and not "json" in filename:
             print fullpath
             file_data = {}
             file_data["filename"] = filename
