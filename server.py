@@ -3,6 +3,8 @@ from flask import render_template
 from werkzeug import secure_filename
 import os
 import exif
+import json
+
 app = Flask(__name__)
 
 
@@ -43,13 +45,22 @@ def create_json(directory):
         if os.path.isfile(fullpath):
             print fullpath
             file_data = {}
-            file_data["filename"] = fullpath
+            file_data["filename"] = filename
             lat_lon = exif.get_gps_radians(fullpath)
             if lat_lon:
                 file_data["latitude"] = lat_lon["latitude"]
                 file_data["longitude"] = lat_lon["longitude"]
-            print file_data
-    return "OK"
+            else:
+                file_data["latitude"] = 0
+                file_data["longitude"] = 0
+            file_data["height"] = 0
+            file_data["roll"] = 0
+            file_data["pitch"] = 0
+            file_data["heading"] = 0
+            json_data.append(file_data)
+    with open(os.path.join(folder_path, 'data.json'), 'w') as f:
+        json.dump(json_data, f)
+    return "Success"
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
